@@ -12,15 +12,21 @@
 
 #include "CloudsVisualSystem.h"
 
-//TODO: rename this to your own visual system
-class CloudsVisualSystemEmpty : public CloudsVisualSystem {
+#include "ofxSQLite.h"
+#include "ofxTextWriter.h"
+
+#include "HistoryNode.h"
+
+//--------------------------------------------------------------
+//--------------------------------------------------------------
+class WebHistoryVisualSystem : public CloudsVisualSystem
+{
   public:
     
-	//TODO: Change this to the name of your visual system
 	//This determines your data path so name it at first!
 	//ie getVisualSystemDataPath() uses this
-    string getSystemName(){
-		return "EmptySystem";
+    string getSystemName() {
+		return "WebHistorySystem";
 	}
 
 	//These methods let us add custom GUI parameters and respond to their events
@@ -90,18 +96,12 @@ class CloudsVisualSystemEmpty : public CloudsVisualSystem {
     void selfMousePressed(ofMouseEventArgs& data);
     void selfMouseReleased(ofMouseEventArgs& data);
 	
-
     // if you use a custom camera to fly through the scene
 	// you must implement this method for the transitions to work properly
 //	ofCamera& getCameraRef(){
 //		return myCustomCamera;
 //	}
-
-	//
-	ofCamera& getCameraRef(){
-		return cloudsCamera;
-	}
-
+    
 protected:
     
     //  Your Stuff
@@ -111,8 +111,16 @@ protected:
 	bool customToggle;
 	float customFloat1;
 	float customFloat2;
-	
-	ofImage someImage;
-	ofShader pointcloudShader;
-	ofVboMesh simplePointcloud;
+    
+    float targetEyeSize;
+    float eyeSize;
+    
+    ofxSQLite * sqlite;
+    vector<string> urls;
+    int nextURL;
+    vector<ofxTextWriter *> searchTerms;
+    int searchTermIdx;
+    
+    map< string, HistoryNode *> hosts;
+    vector<HistoryNode *> orderedNodes;
 };
