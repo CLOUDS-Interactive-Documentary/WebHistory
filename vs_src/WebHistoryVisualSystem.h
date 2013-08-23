@@ -106,6 +106,7 @@ protected:
     
     //  Your Stuff
     //
+    ofTrueTypeFont font;
 	
 	ofxUISuperCanvas* customGui;
 	bool customToggle;

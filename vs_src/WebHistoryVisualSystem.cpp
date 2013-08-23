@@ -58,6 +58,8 @@ void WebHistoryVisualSystem::guiRenderEvent(ofxUIEventArgs &e){
 // geometry should be loaded here
 void WebHistoryVisualSystem::selfSetup()
 {    
+    font.loadFont("GUI/NewMedia Fett.ttf", 12);
+    
     string chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
     sqlite = new ofxSQLite(chromeHistoryPath);
 	
@@ -155,7 +157,7 @@ void WebHistoryVisualSystem::selfUpdate()
 void WebHistoryVisualSystem::selfDraw()
 {
     for (map<string, HistoryNode *>::iterator it = hosts.begin(); it != hosts.end(); ++it) {
-        it->second->draw();
+        it->second->draw(font);
     }
 }
 
@@ -189,13 +191,16 @@ void WebHistoryVisualSystem::selfDrawBackground()
     for (int i = 0; i < (endIdx - startIdx); i++) {
         int idx = startIdx + i;
         if (idx == endIdx) {
-            ofDrawBitmapStringHighlight(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
+//            ofDrawBitmapStringHighlight(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
+            font.drawString(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
         }
         else {
-            ofDrawBitmapString(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
+//            ofDrawBitmapString(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
+            font.drawString(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
         }
         
-        ofDrawBitmapString(urls[idx], ofGetWidth() / 2, (i + 1) * stringHeight);
+//        ofDrawBitmapString(urls[idx], ofGetWidth() / 2, (i + 1) * stringHeight);
+        font.drawString(urls[idx], ofGetWidth() / 2, (i + 1) * stringHeight);
     }
     
 //    ofDrawBitmapString(ofToString(physics->getNumParticles()) + " PARTICLES\n" + ofToString(ofGetFrameRate(), 2) + " FPS", 10, 20);

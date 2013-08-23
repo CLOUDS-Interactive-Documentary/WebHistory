@@ -39,7 +39,7 @@ void HistoryNode::addChild(list<string>& segments, int childLevel)
 }
 
 //--------------------------------------------------------------
-ofPoint HistoryNode::draw()
+ofPoint HistoryNode::draw(ofTrueTypeFont& font)
 {
     ofQuaternion latRot, longRot, spinQuat;
     latRot.makeRotate(_latitude, 1, 0, 0);
@@ -53,10 +53,14 @@ ofPoint HistoryNode::draw()
     ofSphere(worldPoint, 5);
     
     ofSetColor(ofColor::white);
-    ofDrawBitmapString(_name, worldPoint);
+//    ofDrawBitmapString(_name, worldPoint);
+    ofPushMatrix();
+    ofTranslate(worldPoint);
+    font.drawString(_name, 0, 0);
+    ofPopMatrix();
     
     for (auto& it : _children) {
-        ofPoint childPoint = it.second->draw();
+        ofPoint childPoint = it.second->draw(font);
         
         ofSetColor(ofColor::grey);
         ofLine(worldPoint, childPoint);
