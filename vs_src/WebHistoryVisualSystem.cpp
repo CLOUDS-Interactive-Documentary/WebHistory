@@ -18,16 +18,6 @@ void WebHistoryVisualSystem::selfSetupGui()
 	customGui->setName("Custom");
 	customGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
 	
-	customGui->addSlider("Custom Float 1", 1, 1000, &customFloat1);
-	customGui->addSlider("Custom Float 2", 1, 1000, &customFloat2);
-	customGui->addButton("Custom Button", false);
-	customGui->addToggle("Custom Toggle", &customToggle);
-    customGui->addSpacer();
-    customGui->addLabel("DOF");
-    customGui->addSlider("APERTURE", 0, 1, &dofPass->getApertureRef());
-    customGui->addSlider("FOCUS", 0, 1, &dofPass->getFocusRef());
-    customGui->addSlider("MAX BLUR", 0, 1, &dofPass->getMaxBlurRef());
-	
 	ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
 	
 	guis.push_back(customGui);
@@ -121,10 +111,6 @@ void WebHistoryVisualSystem::selfSetup()
     topSearchTermIdx = 0;
     searchTermCount = 1;
     
-    // Setup post-processing chain
-    postProcessing.init(ofGetWidth(), ofGetHeight());
-    postProcessing.createPass<FxaaPass>();
-    dofPass = postProcessing.createPass<DofPass>();
 //	someImage.loadImage( getVisualSystemDataPath() + "images/someImage.png";
 	
 }
@@ -164,13 +150,9 @@ void WebHistoryVisualSystem::selfUpdate()
 // you can change the camera by returning getCameraRef()
 void WebHistoryVisualSystem::selfDraw()
 {
-    postProcessing.begin(getCameraRef());
-    
     for (auto& it: hosts) {
         it.second->draw();
     }
-    
-    postProcessing.end();
 }
 
 // draw any debug stuff here
