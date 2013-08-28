@@ -8,7 +8,14 @@
 
 #include "HistoryNode.h"
 
-int kLevelDepth = 100;
+//--------------------------------------------------------------
+ofTrueTypeFont HistoryNode::font;
+ofColor HistoryNode::textColor(255);
+ofColor HistoryNode::lineColor(128);
+
+float HistoryNode::levelDepth = 100;
+float HistoryNode::noiseStep = 0.02;
+float HistoryNode::noiseAmount = 10;
 
 //--------------------------------------------------------------
 HistoryNode::HistoryNode(const string& segment, int timestamp, int level, list<string>& childSegments, float latitude, float longitude)
@@ -18,6 +25,9 @@ HistoryNode::HistoryNode(const string& segment, int timestamp, int level, list<s
 , _latitude(latitude)
 , _longitude(longitude)
 {
+    _textWidth = font.stringWidth(_name);
+    _textHeight = font.stringHeight("a");  // ignore ascent/descent
+        
     addChild(childSegments, level + 1);
 }
 
@@ -39,38 +49,43 @@ void HistoryNode::addChild(list<string>& segments, int childLevel)
 }
 
 //--------------------------------------------------------------
-ofPoint HistoryNode::draw(ofTrueTypeFont& font)
-{
+ofPoint HistoryNode::draw()
+{    
+    // Add some noise to the mix.
+    _t = ofGetFrameNum() * noiseStep;
+	float latOffset = ofSignedNoise(_t + _latitude) * noiseAmount;
+	float longOffset = ofSignedNoise(_t + _longitude) * noiseAmount;
+    
     ofQuaternion latRot, longRot, spinQuat;
-    latRot.makeRotate(_latitude, 1, 0, 0);
-    longRot.makeRotate(_longitude, 0, 1, 0);
+    latRot.makeRotate(_latitude + latOffset, 1, 0, 0);
+    longRot.makeRotate(_longitude + longOffset, 0, 1, 0);
 //    spinQuat.makeRotate(ofGetFrameNum(), 0, 1, 0);
     
-    ofVec3f center = ofVec3f(0, 0, kLevelDepth * (_level + 1));
+    ofVec3f center = ofVec3f(0, 0, levelDepth * (_level + 1));
     ofVec3f worldPoint = latRot * longRot * spinQuat * center;
     
     ofPushMatrix();
     ofTranslate(worldPoint);
     {
-        ofSetColor(ofColor::red);
-        ofSphere(ofVec3f(), 5);
+//        ofSetColor(ofColor::red);
+//        ofSphere(ofVec3f(), 5);
     
         ofPushMatrix();
         {
             billboard();
-            ofSetColor(ofColor::white);
-//            ofDrawBitmapString(_name, worldPoint);
+            ofSetColor(textColor);
             ofScale(1, -1, 1);
-            font.drawString(_name, 0, 0);
+//            font.drawString(_name, 0, 0);
+            font.drawStringAsShapes(_name, -_textWidth / 2.0f, _textHeight / 2.0f);
         }
         ofPopMatrix();
     }
     ofPopMatrix();
     
     for (auto& it : _children) {
-        ofPoint childPoint = it.second->draw(font);
+        ofPoint childPoint = it.second->draw();
         
-        ofSetColor(ofColor::grey);
+        ofSetColor(lineColor);
         ofLine(worldPoint, childPoint);
     }
     

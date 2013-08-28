@@ -11,23 +11,44 @@
 //These methods let us add custom GUI parameters and respond to their events
 void WebHistoryVisualSystem::selfSetupGui()
 {
-
-	customGui = new ofxUISuperCanvas("CUSTOM", gui);
+	customGui = new ofxUISuperCanvas("WEB HISTORY", gui);
 	customGui->copyCanvasStyle(gui);
 	customGui->copyCanvasProperties(gui);
-	customGui->setName("Custom");
+	customGui->setName("WEB_HISTORY");
 	customGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
 	
+    customGui->addSlider("LEVEL DEPTH", 1, 100, &HistoryNode::levelDepth);
+	customGui->addSlider("NOISE STEP", 0, 0.1, &HistoryNode::noiseStep);
+	customGui->addSlider("NOISE AMOUNT", 1, 10, &HistoryNode::noiseAmount);
+    
+    customGui->addSpacer();
+//    customGui->addSlider("NODE HUE", 0.0, 255.0, HistoryNode::textColor.getHue());
+//    customGui->addSlider("NODE SAT", 0.0, 255.0, HistoryNode::textColor.getSaturation());
+//    customGui->addSlider("NODE BRI", 0.0, 255.0, HistoryNode::textColor.getBrightness());
+//    customGui->addSlider("NODE ALPHA", 0.0, 255.0, HistoryNode::textColor.a);
+    customGui->addSpacer();
+    
 	ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
 	
 	guis.push_back(customGui);
 	guimap[customGui->getName()] = customGui;
 }
 
-void WebHistoryVisualSystem::selfGuiEvent(ofxUIEventArgs &e){
-	if(e.widget->getName() == "Custom Button"){
-		cout << "Button pressed!" << endl;
+//--------------------------------------------------------------
+void WebHistoryVisualSystem::selfGuiEvent(ofxUIEventArgs &e)
+{
+	if (e.widget->getName() == "NODE HUE") {
+        HistoryNode::textColor.setHue(((ofxUISlider *)e.widget)->getValue());
 	}
+    else if (e.widget->getName() == "NODE SAT") {
+        HistoryNode::textColor.setSaturation(((ofxUISlider *)e.widget)->getValue());
+	}
+    else if (e.widget->getName() == "NODE BRI") {
+        HistoryNode::textColor.setBrightness(((ofxUISlider *)e.widget)->getValue());
+	}
+    else if (e.widget->getName() == "NODE ALPHA") {
+        HistoryNode::textColor.a = ((ofxUISlider *)e.widget)->getValue();
+    }
 }
 
 //Use system gui for global or logical settings, for exmpl
@@ -53,7 +74,9 @@ void WebHistoryVisualSystem::guiRenderEvent(ofxUIEventArgs &e){
 // geometry should be loaded here
 void WebHistoryVisualSystem::selfSetup()
 {    
+    // Load fonts.
     font.loadFont("GUI/NewMedia Fett.ttf", 12);
+    HistoryNode::font.loadFont("GUI/NewMedia Fett.ttf", 12, true, true, true);
     
     string chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
     sqlite = new ofxSQLite(chromeHistoryPath);
@@ -165,8 +188,10 @@ void WebHistoryVisualSystem::selfDrawDebug()
 // or you can use selfDrawBackground to do 2D drawings that don't use the 3D camera
 void WebHistoryVisualSystem::selfDrawBackground()
 {
-	//turn the background refresh off
+    //turn the background refresh off
 	//bClearBackground = false;
+    
+    ofSetColor(ofColor::green);
     
     int stringHeight = 20;
     int maxNumStrings = ofGetHeight() / stringHeight;

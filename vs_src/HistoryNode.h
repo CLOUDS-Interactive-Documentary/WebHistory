@@ -21,8 +21,16 @@ public:
     void addChild(list<string>& segments, int childLevel);
     
     void billboard();
-    ofPoint draw(ofTrueTypeFont& font);
+    ofPoint draw();
     void print();
+    
+    static ofTrueTypeFont font;
+    static ofColor textColor;
+    static ofColor lineColor;
+    
+    static float levelDepth;
+    static float noiseStep;
+    static float noiseAmount;
     
 private:
     string _name;
@@ -30,6 +38,11 @@ private:
     int _level;
     map<string, HistoryNode *> _children;
     
+    float _textWidth;
+    float _textHeight;
+    
     float _latitude;
     float _longitude;
+    
+    float _t;
 };
