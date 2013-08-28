@@ -103,21 +103,12 @@ class WebHistoryVisualSystem : public CloudsVisualSystem
 //	}
     
 protected:
-    
-    //  Your Stuff
-    //
-    ofTrueTypeFont font;
+    ofTrueTypeFont listFont;
 	
 	ofxUISuperCanvas* customGui;
-	bool customToggle;
-	float customFloat1;
-	float customFloat2;
-    
-    float targetEyeSize;
-    float eyeSize;
-    
+	
     ofxSQLite * sqlite;
-    vector<string> urls;
+    
     vector<ofxTextWriter *> searchTerms;
     int currSearchTermIdx;
     int topSearchTermIdx;

@@ -22,10 +22,6 @@ void WebHistoryVisualSystem::selfSetupGui()
 	customGui->addSlider("NOISE AMOUNT", 1, 10, &HistoryNode::noiseAmount);
     
     customGui->addSpacer();
-//    customGui->addSlider("NODE HUE", 0.0, 255.0, HistoryNode::textColor.getHue());
-//    customGui->addSlider("NODE SAT", 0.0, 255.0, HistoryNode::textColor.getSaturation());
-//    customGui->addSlider("NODE BRI", 0.0, 255.0, HistoryNode::textColor.getBrightness());
-//    customGui->addSlider("NODE ALPHA", 0.0, 255.0, HistoryNode::textColor.a);
     customGui->addSpacer();
     
 	ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
@@ -75,7 +71,7 @@ void WebHistoryVisualSystem::guiRenderEvent(ofxUIEventArgs &e){
 void WebHistoryVisualSystem::selfSetup()
 {    
     // Load fonts.
-    font.loadFont("GUI/NewMedia Fett.ttf", 12);
+    listFont.loadFont("GUI/NewMedia Fett.ttf", 12);
     HistoryNode::font.loadFont("GUI/NewMedia Fett.ttf", 12, true, true, true);
     
     string chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
@@ -90,7 +86,6 @@ void WebHistoryVisualSystem::selfSetup()
         string url = sel.getString();
         time_t timestamp = sel.getInt();
         
-        urls.push_back(url);
 		sel.next();
         ++count;
         
@@ -133,9 +128,6 @@ void WebHistoryVisualSystem::selfSetup()
     currSearchTermIdx = 0;
     topSearchTermIdx = 0;
     searchTermCount = 1;
-    
-//	someImage.loadImage( getVisualSystemDataPath() + "images/someImage.png";
-	
 }
 
 //--------------------------------------------------------------
@@ -188,9 +180,6 @@ void WebHistoryVisualSystem::selfDrawDebug()
 // or you can use selfDrawBackground to do 2D drawings that don't use the 3D camera
 void WebHistoryVisualSystem::selfDrawBackground()
 {
-    //turn the background refresh off
-	//bClearBackground = false;
-    
     ofSetColor(ofColor::green);
     
     int stringHeight = 20;
@@ -215,9 +204,10 @@ void WebHistoryVisualSystem::selfDrawBackground()
     for (int i = 0; i < searchTermCount; i++) {
         int idx = (topSearchTermIdx + i) % searchTerms.size();
         searchTerms[idx]->update();
-        font.drawString(searchTerms[idx]->textToRender(), 10, (i + 1) * stringHeight);
+        listFont.drawString(searchTerms[idx]->textToRender(), 10, (i + 1) * stringHeight);
     }
 }
+
 // this is called when your system is no longer drawing.
 // Right after this selfUpdate() and selfDraw() won't be called any more
 void WebHistoryVisualSystem::selfEnd()
