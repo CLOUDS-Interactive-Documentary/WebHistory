@@ -17,6 +17,7 @@ void WebHistoryVisualSystem::selfSetupGui()
 	customGui->setName("WEB_HISTORY");
 	customGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
 	
+    customGui->addSlider("SPIN SPEED", 0, 5, &spinSpeed);
     customGui->addSlider("LEVEL DEPTH", 1, 100, &HistoryNode::levelDepth);
 	customGui->addSlider("NOISE STEP", 0, 0.1, &HistoryNode::noiseStep);
 	customGui->addSlider("NOISE AMOUNT", 1, 10, &HistoryNode::noiseAmount);
@@ -114,6 +115,10 @@ void WebHistoryVisualSystem::selfSetup()
     listFont.loadFont("GUI/NewMedia Fett.ttf", 12);
     HistoryNode::font.loadFont("GUI/NewMedia Fett.ttf", 12, true, true, true);
     
+    // Set defaults.
+    currSpin = 0.0f;
+    spinSpeed = 0.5f;
+    
     string chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
     sqlite = new ofxSQLite(chromeHistoryPath);
 	
@@ -198,13 +203,14 @@ void WebHistoryVisualSystem::selfSceneTransformation(){
 //normal update call
 void WebHistoryVisualSystem::selfUpdate()
 {
-
+    currSpin += spinSpeed;
 }
 
 // selfDraw draws in 3D using the default ofEasyCamera
 // you can change the camera by returning getCameraRef()
 void WebHistoryVisualSystem::selfDraw()
 {
+    ofRotate(currSpin, 0, 1, 0);
     for (auto& it: hosts) {
         it.second->draw();
     }

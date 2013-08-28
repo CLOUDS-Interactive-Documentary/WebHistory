@@ -117,4 +117,7 @@ protected:
     
     map< string, HistoryNode *> hosts;
     vector<HistoryNode *> orderedNodes;
+    
+    float currSpin;
+    float spinSpeed;
 };
