@@ -104,6 +104,7 @@ class WebHistoryVisualSystem : public CloudsVisualSystem
     
 protected:
     ofTrueTypeFont listFont;
+    ofColor listColor;
 	
 	ofxUISuperCanvas* customGui;
 	

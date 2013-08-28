@@ -22,7 +22,20 @@ void WebHistoryVisualSystem::selfSetupGui()
 	customGui->addSlider("NOISE AMOUNT", 1, 10, &HistoryNode::noiseAmount);
     
     customGui->addSpacer();
+    customGui->addSlider("LIST HUE", 0.0, 1.0, listColor.getHue());
+    customGui->addSlider("LIST SAT", 0.0, 1.0, listColor.getSaturation());
+    customGui->addSlider("LIST BRI", 0.0, 1.0, listColor.getBrightness());
+    customGui->addSlider("LIST ALPHA", 0.0, 1.0, listColor.a);
     customGui->addSpacer();
+    customGui->addSlider("NODE HUE", 0.0, 1.0, HistoryNode::textColor.getHue());
+    customGui->addSlider("NODE SAT", 0.0, 1.0, HistoryNode::textColor.getSaturation());
+    customGui->addSlider("NODE BRI", 0.0, 1.0, HistoryNode::textColor.getBrightness());
+    customGui->addSlider("NODE ALPHA", 0.0, 1.0, HistoryNode::textColor.a);
+    customGui->addSpacer();
+    customGui->addSlider("LINE HUE", 0.0, 1.0, HistoryNode::lineColor.getHue());
+    customGui->addSlider("LINE SAT", 0.0, 1.0, HistoryNode::lineColor.getSaturation());
+    customGui->addSlider("LINE BRI", 0.0, 1.0, HistoryNode::lineColor.getBrightness());
+    customGui->addSlider("LINE ALPHA", 0.0, 1.0, HistoryNode::lineColor.a);
     
 	ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
 	
@@ -33,17 +46,43 @@ void WebHistoryVisualSystem::selfSetupGui()
 //--------------------------------------------------------------
 void WebHistoryVisualSystem::selfGuiEvent(ofxUIEventArgs &e)
 {
-	if (e.widget->getName() == "NODE HUE") {
-        HistoryNode::textColor.setHue(((ofxUISlider *)e.widget)->getValue());
+    if (e.widget->getName() == "LIST HUE") {
+        listColor.setHue(((ofxUISlider *)e.widget)->getValue() * 255);
+	}
+    else if (e.widget->getName() == "LIST SAT") {
+        listColor.setSaturation(((ofxUISlider *)e.widget)->getValue() * 255);
+	}
+    else if (e.widget->getName() == "LIST BRI") {
+        listColor.setBrightness(((ofxUISlider *)e.widget)->getValue() * 255);
+	}
+    else if (e.widget->getName() == "LIST ALPHA") {
+        listColor.a = ((ofxUISlider *)e.widget)->getValue() * 255;
+    }
+    
+    else if (e.widget->getName() == "NODE HUE") {
+        HistoryNode::textColor.setHue(((ofxUISlider *)e.widget)->getValue() * 255);
 	}
     else if (e.widget->getName() == "NODE SAT") {
-        HistoryNode::textColor.setSaturation(((ofxUISlider *)e.widget)->getValue());
+        HistoryNode::textColor.setSaturation(((ofxUISlider *)e.widget)->getValue() * 255);
 	}
     else if (e.widget->getName() == "NODE BRI") {
-        HistoryNode::textColor.setBrightness(((ofxUISlider *)e.widget)->getValue());
+        HistoryNode::textColor.setBrightness(((ofxUISlider *)e.widget)->getValue() * 255);
 	}
     else if (e.widget->getName() == "NODE ALPHA") {
-        HistoryNode::textColor.a = ((ofxUISlider *)e.widget)->getValue();
+        HistoryNode::textColor.a = ((ofxUISlider *)e.widget)->getValue() * 255;
+    }
+    
+    else if (e.widget->getName() == "LINE HUE") {
+        HistoryNode::lineColor.setHue(((ofxUISlider *)e.widget)->getValue() * 255);
+	}
+    else if (e.widget->getName() == "LINE SAT") {
+        HistoryNode::lineColor.setSaturation(((ofxUISlider *)e.widget)->getValue() * 255);
+	}
+    else if (e.widget->getName() == "LINE BRI") {
+        HistoryNode::lineColor.setBrightness(((ofxUISlider *)e.widget)->getValue() * 255);
+	}
+    else if (e.widget->getName() == "LINE ALPHA") {
+        HistoryNode::lineColor.a = ((ofxUISlider *)e.widget)->getValue() * 255;
     }
 }
 
@@ -71,6 +110,7 @@ void WebHistoryVisualSystem::guiRenderEvent(ofxUIEventArgs &e){
 void WebHistoryVisualSystem::selfSetup()
 {    
     // Load fonts.
+    listColor.set(255, 128, 64);  // Pick a non-gray color so that HSB gets set properly.
     listFont.loadFont("GUI/NewMedia Fett.ttf", 12);
     HistoryNode::font.loadFont("GUI/NewMedia Fett.ttf", 12, true, true, true);
     
@@ -180,7 +220,7 @@ void WebHistoryVisualSystem::selfDrawDebug()
 // or you can use selfDrawBackground to do 2D drawings that don't use the 3D camera
 void WebHistoryVisualSystem::selfDrawBackground()
 {
-    ofSetColor(ofColor::green);
+    ofSetColor(listColor);
     
     int stringHeight = 20;
     int maxNumStrings = ofGetHeight() / stringHeight;
