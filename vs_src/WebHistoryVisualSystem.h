@@ -118,9 +118,10 @@ protected:
     
     ofxSQLite * sqlite;
     vector<string> urls;
-    int nextURL;
     vector<ofxTextWriter *> searchTerms;
-    int searchTermIdx;
+    int currSearchTermIdx;
+    int topSearchTermIdx;
+    int searchTermCount;
     
     map< string, HistoryNode *> hosts;
     vector<HistoryNode *> orderedNodes;

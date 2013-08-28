@@ -71,7 +71,6 @@ void WebHistoryVisualSystem::selfSetup()
 	while (sel.hasNext() && count < 50) {
         string url = sel.getString();
         time_t timestamp = sel.getInt();
-//        string time = asctime(gmtime(&timestamp));
         
         urls.push_back(url);
 		sel.next();
@@ -107,15 +106,15 @@ void WebHistoryVisualSystem::selfSetup()
     count = 0;
 	while (sel.hasNext() && count < 50) {
         string url = sel.getString();
-        ofxTextWriter * term = new ofxTextWriter(url, 1);
-//        string term = sel.getString();
+        ofxTextWriter * term = new ofxTextWriter(url);
         searchTerms.push_back(term);
 		sel.next();
         ++count;
 	}
     
-    searchTermIdx = 0;
-    nextURL = 0;
+    currSearchTermIdx = 0;
+    topSearchTermIdx = 0;
+    searchTermCount = 1;
     
 //	someImage.loadImage( getVisualSystemDataPath() + "images/someImage.png";
 	
@@ -174,39 +173,30 @@ void WebHistoryVisualSystem::selfDrawBackground()
 	//turn the background refresh off
 	//bClearBackground = false;
     
-    if (ofGetFrameNum() % 10 == 0) {
-        searchTermIdx = (searchTermIdx + 1) % searchTerms.size();
-    }
-    
     int stringHeight = 20;
-    int numStrings = ofGetHeight() / stringHeight;
+    int maxNumStrings = ofGetHeight() / stringHeight;
     
-    int endIdx = searchTermIdx;
-    int startIdx = MAX(0, searchTermIdx - numStrings);
-    
-//    cout << "printing from " << startIdx << " to " << endIdx << endl;
-
-    ofSetColor(128);
-    
-    for (int i = 0; i < (endIdx - startIdx); i++) {
-        int idx = startIdx + i;
-        if (idx == endIdx) {
-//            ofDrawBitmapStringHighlight(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
-            font.drawString(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
-        }
-        else {
-//            ofDrawBitmapString(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
-            font.drawString(searchTerms[idx]->whatToRender(), 10, (i + 1) * stringHeight);
-        }
+    if (searchTerms[currSearchTermIdx]->isDone()) {
+        // Start rendering the next term.
+        currSearchTermIdx = (currSearchTermIdx + 1) % searchTerms.size();
+        searchTerms[currSearchTermIdx]->reset();
         
-//        ofDrawBitmapString(urls[idx], ofGetWidth() / 2, (i + 1) * stringHeight);
-        font.drawString(urls[idx], ofGetWidth() / 2, (i + 1) * stringHeight);
+        // Go to the next line.
+        ++searchTermCount;
+        if (searchTermCount > maxNumStrings) {
+            searchTermCount = maxNumStrings;
+
+            // Scroll up.
+            topSearchTermIdx = (topSearchTermIdx + 1) % searchTerms.size();
+        }
     }
     
-//    ofDrawBitmapString(ofToString(physics->getNumParticles()) + " PARTICLES\n" + ofToString(ofGetFrameRate(), 2) + " FPS", 10, 20);
-    
-
-	
+    // Render the search terms.
+    for (int i = 0; i < searchTermCount; i++) {
+        int idx = (topSearchTermIdx + i) % searchTerms.size();
+        searchTerms[idx]->update();
+        font.drawString(searchTerms[idx]->textToRender(), 10, (i + 1) * stringHeight);
+    }
 }
 // this is called when your system is no longer drawing.
 // Right after this selfUpdate() and selfDraw() won't be called any more

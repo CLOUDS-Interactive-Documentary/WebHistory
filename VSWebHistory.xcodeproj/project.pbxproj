@@ -80,6 +80,7 @@
 		4695E2BE17512E45003001E2 /* ofxVerletSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4695E2AD17512E45003001E2 /* ofxVerletSolver.cpp */; };
 		4695E2CA17513D99003001E2 /* ofxCameraSaveLoad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4695E2C817513D99003001E2 /* ofxCameraSaveLoad.cpp */; };
 		64448D6517A5965E003D185B /* HistoryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64448D6417A5965E003D185B /* HistoryNode.cpp */; };
+		644612DD17CE46F400A463F4 /* ofxTextWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 644612DC17CE46F400A463F4 /* ofxTextWriter.cpp */; };
 		644DD7FC17A206F2009950CB /* ofxAVFVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 644DD7F717A206F2009950CB /* ofxAVFVideoPlayer.mm */; };
 		644DD7FD17A206F2009950CB /* ofxAVFVideoRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 644DD7F917A206F2009950CB /* ofxAVFVideoRenderer.m */; };
 		644DD80417A2072B009950CB /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 644DD80117A2072B009950CB /* AVFoundation.framework */; };
@@ -387,6 +388,7 @@
 		64448CBF17A49422003D185B /* ofxTextWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextWriter.h; sourceTree = "<group>"; };
 		64448D6317A59651003D185B /* HistoryNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryNode.h; sourceTree = "<group>"; };
 		64448D6417A5965E003D185B /* HistoryNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HistoryNode.cpp; sourceTree = "<group>"; };
+		644612DC17CE46F400A463F4 /* ofxTextWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTextWriter.cpp; sourceTree = "<group>"; };
 		644DD7F617A206F2009950CB /* ofxAVFVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAVFVideoPlayer.h; sourceTree = "<group>"; };
 		644DD7F717A206F2009950CB /* ofxAVFVideoPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxAVFVideoPlayer.mm; sourceTree = "<group>"; };
 		644DD7F817A206F2009950CB /* ofxAVFVideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAVFVideoRenderer.h; sourceTree = "<group>"; };
@@ -1034,6 +1036,7 @@
 			isa = PBXGroup;
 			children = (
 				64448CBF17A49422003D185B /* ofxTextWriter.h */,
+				644612DC17CE46F400A463F4 /* ofxTextWriter.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -1399,6 +1402,7 @@
 				644DFAFE17A477CF00248BD1 /* ofxSQLiteSelect.cpp in Sources */,
 				644DFB0017A477CF00248BD1 /* ofxSQLiteUpdate.cpp in Sources */,
 				64448D6517A5965E003D185B /* HistoryNode.cpp in Sources */,
+				644612DD17CE46F400A463F4 /* ofxTextWriter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
