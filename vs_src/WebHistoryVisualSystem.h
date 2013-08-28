@@ -12,6 +12,7 @@
 
 #include "CloudsVisualSystem.h"
 
+#include "ofxPostProcessing.h"
 #include "ofxSQLite.h"
 #include "ofxTextWriter.h"
 
@@ -125,4 +126,7 @@ protected:
     
     map< string, HistoryNode *> hosts;
     vector<HistoryNode *> orderedNodes;
+    
+    ofxPostProcessing postProcessing;
+    shared_ptr<DofPass> dofPass;
 };
