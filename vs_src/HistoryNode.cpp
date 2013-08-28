@@ -49,14 +49,22 @@ ofPoint HistoryNode::draw(ofTrueTypeFont& font)
     ofVec3f center = ofVec3f(0, 0, kLevelDepth * (_level + 1));
     ofVec3f worldPoint = latRot * longRot * spinQuat * center;
     
-    ofSetColor(ofColor::red);
-    ofSphere(worldPoint, 5);
-    
-    ofSetColor(ofColor::white);
-//    ofDrawBitmapString(_name, worldPoint);
     ofPushMatrix();
     ofTranslate(worldPoint);
-    font.drawString(_name, 0, 0);
+    {
+        ofSetColor(ofColor::red);
+        ofSphere(ofVec3f(), 5);
+    
+        ofPushMatrix();
+        {
+            billboard();
+            ofSetColor(ofColor::white);
+//            ofDrawBitmapString(_name, worldPoint);
+            ofScale(1, -1, 1);
+            font.drawString(_name, 0, 0);
+        }
+        ofPopMatrix();
+    }
     ofPopMatrix();
     
     for (auto& it : _children) {
@@ -67,6 +75,30 @@ ofPoint HistoryNode::draw(ofTrueTypeFont& font)
     }
     
     return worldPoint;
+}
+
+//--------------------------------------------------------------
+void HistoryNode::billboard()
+{
+	// get the current modelview matrix
+	float modelview[16];    
+	glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
+    
+	// undo all rotations
+	// beware all scaling is lost as well
+	for (int i = 0; i < 3; i++) {
+		for (int j=0; j < 3; j++) {
+			if (i == j) {
+				modelview[i * 4 + j] = 1.0;
+            }
+			else {
+				modelview[i * 4 + j] = 0.0;
+            }
+		}
+    }
+    
+	// set the modelview with no rotations
+	glLoadMatrixf(modelview);
 }
 
 //--------------------------------------------------------------
