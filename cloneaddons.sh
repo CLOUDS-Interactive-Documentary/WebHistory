@@ -31,7 +31,7 @@ git checkout develop
 cd ..
 
 git clone https://github.com/roymacdonald/ofxCameraSaveLoad
-git clone https://github.com/roxlu/ofxSQLite
+git clone https://github.com/prisonerjohn/ofxSQLite
 git clone https://github.com/prisonerjohn/ofxTextWriter
 ${PREFIX}rezaali/ofxGenerative
 ${PREFIX}obviousjim/ofxAVFVideoPlayer
