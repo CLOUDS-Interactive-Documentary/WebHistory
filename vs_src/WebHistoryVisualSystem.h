@@ -95,6 +95,10 @@ class WebHistoryVisualSystem : public CloudsVisualSystem
     void selfMouseMoved(ofMouseEventArgs& data);
     void selfMousePressed(ofMouseEventArgs& data);
     void selfMouseReleased(ofMouseEventArgs& data);
+    
+    bool fetchChromeHistory(bool bUseSample = false);
+    bool fetchSafariHistory();
+    bool fetchFirefoxHistory();
 	
     // if you use a custom camera to fly through the scene
 	// you must implement this method for the transitions to work properly
@@ -108,8 +112,6 @@ protected:
 	
 	ofxUISuperCanvas* customGui;
 	
-    ofxSQLite * sqlite;
-    
     vector<ofxTextWriter *> searchTerms;
     int currSearchTermIdx;
     int topSearchTermIdx;

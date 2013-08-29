@@ -119,12 +119,139 @@ void WebHistoryVisualSystem::selfSetup()
     currSpin = 0.0f;
     spinSpeed = 0.5f;
     
-    string chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
-    sqlite = new ofxSQLite(chromeHistoryPath);
-	
-	ofxSQLiteSelect sel = sqlite->select("url, last_visit_time").from("urls")
-                                                                .order("last_visit_time", "DESC")
-                                                                .execute().begin();
+    if (fetchChromeHistory()) {
+        ofLogNotice("VSWebHistory") << "Using live Chrome data" << endl;
+    }
+    else if (fetchSafariHistory()) {
+        ofLogNotice("VSWebHistory") << "Using live Safari data" << endl;
+    }
+    else if (fetchFirefoxHistory()) {
+        ofLogNotice("VSWebHistory") << "Using live Firefox data" << endl;
+    }
+    else if (fetchChromeHistory(true)) {
+        ofLogNotice("VSWebHistory") << "Using sample Chrome data" << endl;
+    }
+    else {
+        ofLogError("VSWebHistory") << "No available web history!" << endl;
+    }
+    
+
+//--------------------------------------------------------------
+bool WebHistoryVisualSystem::fetchChromeHistory(bool bUseSample)
+{
+    string chromeHistoryPath;
+    if (bUseSample) {
+        chromeHistoryPath = getVisualSystemDataPath() + "SampleChromeHistory";
+    }
+    else {
+        chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
+    }
+    
+    ofxSQLite sqlite;
+    if (!sqlite.setup(chromeHistoryPath)) {
+        // No dice :(
+        return false;
+    }
+    	
+	ofxSQLiteSelect sel = sqlite.select("url, last_visit_time").from("urls")
+                                .order("last_visit_time", "DESC")
+                                .execute().begin();
+    
+    if (!sel.hasRow()) {
+        // No rows, db is probably locked.
+        return false;
+    }
+    
+    int count = 0;
+	while (sel.hasNext() && count < 50) {
+        string url = sel.getString();
+        time_t timestamp = sel.getInt();
+        
+		sel.next();
+        ++count;
+        
+        Poco::URI uri(url);
+        string host = uri.getHost();
+        vector<string> segments;
+        uri.getPathSegments(segments);
+        list<string> segmentList;
+        for (int i = 0; i < segments.size(); i++) {
+            segmentList.push_back(segments[i]);
+        }
+        
+        try {
+            HistoryNode * node = hosts.at(host);
+            node->addChild(segmentList, 1);
+        }
+        catch (const std::out_of_range& e) {
+            HistoryNode * node = new HistoryNode(host, timestamp, 0, segmentList);
+            hosts[host] = node;
+        }
+	}
+        
+    if (ofGetLogLevel() <= OF_LOG_VERBOSE) {
+        for (auto& it : hosts) {
+            it.second->print();
+        }
+    }
+    
+    sel = sqlite.select("lower_term").from("keyword_search_terms")
+                .order("url_id", "DESC")
+                .execute().begin();
+    
+    count = 0;
+	while (sel.hasNext() && count < 50) {
+        string url = sel.getString();
+        ofxTextWriter * term = new ofxTextWriter(url);
+        searchTerms.push_back(term);
+		sel.next();
+        ++count;
+	}
+    
+    currSearchTermIdx = 0;
+    topSearchTermIdx = 0;
+    searchTermCount = 1;
+    
+    return true;
+}
+
+//--------------------------------------------------------------
+bool WebHistoryVisualSystem::fetchSafariHistory()
+{
+    string safariHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Safari/History.plist";
+    
+    ofxXmlSettings xml;
+    if (!xml.loadFile(safariHistoryPath)) {
+        // No dice :(
+        return false;
+    }
+    
+    return true;
+}
+
+//--------------------------------------------------------------
+bool WebHistoryVisualSystem::fetchFirefoxHistory()
+{
+    ofDirectory dir;
+    dir.listDir(ofFilePath::getUserHomeDir() + "/Library/Application Support/Firefox/Profiles/");
+    if (!dir.size()) {
+        // No dice :(
+        return false;
+    }
+    
+    string firefoxHistoryPath = dir.getPath(0) + "/places.sqlite";
+    
+    ofxSQLite sqlite;
+    sqlite.setup(firefoxHistoryPath);
+    
+	ofxSQLiteSelect sel = sqlite.select("url, last_visit_date").from("moz_places")
+                                .order("last_visit_date", "DESC")
+                                .execute().begin();
+    
+    if (!sel.hasRow()) {
+        // No rows, db is probably locked.
+        return false;
+    }
     
     int count = 0;
 	while (sel.hasNext() && count < 50) {
@@ -153,26 +280,13 @@ void WebHistoryVisualSystem::selfSetup()
         }
 	}
     
-    for (map<string, HistoryNode *>::iterator it = hosts.begin(); it != hosts.end(); ++it) {
-        it->second->print();
+    if (ofGetLogLevel() <= OF_LOG_VERBOSE) {
+        for (auto& it : hosts) {
+            it.second->print();
+        }
     }
     
-    sel = sqlite->select("lower_term").from("keyword_search_terms")
-                                      .order("url_id", "DESC")
-                                      .execute().begin();
-    
-    count = 0;
-	while (sel.hasNext() && count < 50) {
-        string url = sel.getString();
-        ofxTextWriter * term = new ofxTextWriter(url);
-        searchTerms.push_back(term);
-		sel.next();
-        ++count;
-	}
-    
-    currSearchTermIdx = 0;
-    topSearchTermIdx = 0;
-    searchTermCount = 1;
+    return true;
 }
 
 //--------------------------------------------------------------
