@@ -317,7 +317,7 @@ void WebHistoryVisualSystem::selfPresetLoaded(string presetPath)
 // but try to keep it light weight as to not cause stuttering
 void WebHistoryVisualSystem::selfBegin()
 {
-    ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
+
 }
 
 //do things like ofRotate/ofTranslate here
