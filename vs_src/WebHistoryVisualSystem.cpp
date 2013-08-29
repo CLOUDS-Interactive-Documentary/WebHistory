@@ -17,6 +17,7 @@ void WebHistoryVisualSystem::selfSetupGui()
 	customGui->setName("WEB_HISTORY");
 	customGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
 	
+    customGui->addSlider("TYPE SPEED", 1, 500, &typeSpeed);
     customGui->addSlider("SPIN SPEED", 0, 5, &spinSpeed);
     customGui->addSlider("LEVEL DEPTH", 1, 100, &HistoryNode::levelDepth);
 	customGui->addSlider("NOISE STEP", 0, 0.1, &HistoryNode::noiseStep);
@@ -109,7 +110,7 @@ void WebHistoryVisualSystem::guiRenderEvent(ofxUIEventArgs &e){
 // This will be called during a "loading" screen, so any big images or
 // geometry should be loaded here
 void WebHistoryVisualSystem::selfSetup()
-{    
+{
     // Load fonts.
     listColor.set(255, 128, 64);  // Pick a non-gray color so that HSB gets set properly.
     listFont.loadFont("GUI/NewMedia Fett.ttf", 12);
@@ -118,6 +119,7 @@ void WebHistoryVisualSystem::selfSetup()
     // Set defaults.
     currSpin = 0.0f;
     spinSpeed = 0.5f;
+    typeSpeed = 10;
     
     if (fetchChromeHistory()) {
         ofLogNotice("VSWebHistory") << "Using live Chrome data" << endl;
@@ -348,7 +350,7 @@ void WebHistoryVisualSystem::selfDrawBackground()
     if (searchTerms[currSearchTermIdx]->isDone()) {
         // Start rendering the next term.
         currSearchTermIdx = (currSearchTermIdx + 1) % searchTerms.size();
-        searchTerms[currSearchTermIdx]->reset();
+        searchTerms[currSearchTermIdx]->reset(typeSpeed);
         
         // Go to the next line.
         ++searchTermCount;

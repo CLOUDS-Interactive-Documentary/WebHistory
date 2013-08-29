@@ -122,4 +122,5 @@ protected:
     
     float currSpin;
     float spinSpeed;
+    float typeSpeed;
 };
