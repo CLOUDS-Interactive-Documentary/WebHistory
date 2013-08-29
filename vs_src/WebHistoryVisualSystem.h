@@ -14,6 +14,7 @@
 
 #include "ofxSQLite.h"
 #include "ofxTextWriter.h"
+#include "ofxPostProcessing.h"
 
 #include "HistoryNode.h"
 
@@ -123,4 +124,7 @@ protected:
     float currSpin;
     float spinSpeed;
     float typeSpeed;
+    
+    ofxPostProcessing postProcessing;
+    shared_ptr<DofPass> dofPass;
 };
