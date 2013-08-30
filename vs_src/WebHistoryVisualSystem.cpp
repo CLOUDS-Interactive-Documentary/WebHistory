@@ -24,6 +24,12 @@ void WebHistoryVisualSystem::selfSetupGui()
 	customGui->addSlider("NOISE AMOUNT", 1, 10, &HistoryNode::noiseAmount);
     
     customGui->addSpacer();
+    customGui->addSlider("MIN Z", -2000.0, 0.0, &HistoryNode::minZ);
+    customGui->addSlider("MAX Z", 0.0, 2000.0, &HistoryNode::maxZ);
+    customGui->addSlider("MIN ALPHA", 0.0, 1.0, &HistoryNode::minAlpha);
+
+    
+    customGui->addSpacer();
     customGui->addSlider("LIST HUE", 0.0, 1.0, listColor.getHue());
     customGui->addSlider("LIST SAT", 0.0, 1.0, listColor.getSaturation());
     customGui->addSlider("LIST BRI", 0.0, 1.0, listColor.getBrightness());

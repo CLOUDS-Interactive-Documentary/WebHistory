@@ -20,13 +20,19 @@ public:
     HistoryNode(const string& name, int timestamp, int level, list<string>& childSegments, float latitude = ofRandom(360), float longitude = ofRandom(360));
     void addChild(list<string>& segments, int childLevel);
     
-    void billboard();
+    float billboard();
     ofPoint draw();
     void print();
+    
+    float alpha;
     
     static ofTrueTypeFont font;
     static ofColor textColor;
     static ofColor lineColor;
+    
+    static float minZ;
+    static float maxZ;
+    static float minAlpha;
     
     static float levelDepth;
     static float noiseStep;

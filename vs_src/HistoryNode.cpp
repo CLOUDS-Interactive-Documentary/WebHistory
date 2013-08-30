@@ -13,6 +13,10 @@ ofTrueTypeFont HistoryNode::font;
 ofColor HistoryNode::textColor(255);
 ofColor HistoryNode::lineColor(128);
 
+float HistoryNode::minZ = -1000;
+float HistoryNode::maxZ = 0;
+float HistoryNode::minAlpha = 0;
+
 float HistoryNode::levelDepth = 100;
 float HistoryNode::noiseStep = 0.02;
 float HistoryNode::noiseAmount = 10;
@@ -67,40 +71,40 @@ ofPoint HistoryNode::draw()
     ofPushMatrix();
     ofTranslate(worldPoint);
     {
-//        ofSetColor(ofColor::red);
-//        ofSphere(ofVec3f(), 5);
-    
-        ofPushMatrix();
-        {
-            billboard();
-            ofSetColor(textColor);
-            ofScale(1, -1, 1);
-//            font.drawString(_name, 0, 0);
-            font.drawStringAsShapes(_name, -_textWidth / 2.0f, _textHeight / 2.0f);
-        }
-        ofPopMatrix();
+        float z = billboard();
+        alpha = ofMap(z, minZ, maxZ, minAlpha * 255, 255, true);
+        
+        ofScale(1, -1, 1);
+        ofSetColor(textColor, alpha);
+//            font.drawString(_name, -_textWidth / 2.0f, _textHeight / 2.0f);
+        font.drawStringAsShapes(_name, -_textWidth / 2.0f, _textHeight / 2.0f);
     }
     ofPopMatrix();
     
     for (auto& it : _children) {
         ofPoint childPoint = it.second->draw();
         
-        ofSetColor(lineColor);
-        ofLine(worldPoint, childPoint);
+        // Use the node alphas when drawing the connecting lines.
+        glBegin(GL_LINE_STRIP);
+        ofSetColor(lineColor, alpha);
+        glVertex3f(worldPoint.x, worldPoint.y, worldPoint.z);
+        ofSetColor(lineColor, it.second->alpha);
+        glVertex3f(childPoint.x, childPoint.y, childPoint.z);
+        glEnd();
     }
     
     return worldPoint;
 }
 
 //--------------------------------------------------------------
-void HistoryNode::billboard()
+float HistoryNode::billboard()
 {
-	// get the current modelview matrix
+	// Get the current modelview matrix.
 	float modelview[16];    
 	glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
     
-	// undo all rotations
-	// beware all scaling is lost as well
+	// Undo all rotations.
+	// Beware all scaling is lost as well.
 	for (int i = 0; i < 3; i++) {
 		for (int j=0; j < 3; j++) {
 			if (i == j) {
@@ -112,8 +116,11 @@ void HistoryNode::billboard()
 		}
     }
     
-	// set the modelview with no rotations
+	// Set the modelview with no rotations.
 	glLoadMatrixf(modelview);
+    
+    // Return z-coord for setting the alpha.
+    return modelview[14];
 }
 
 //--------------------------------------------------------------
