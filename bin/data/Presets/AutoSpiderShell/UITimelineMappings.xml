@@ -1,0 +1,40 @@
+<Map>
+    <Bangs></Bangs>
+    <Switches>
+        <Mapping>
+            <Widget>
+                <WidgetName>CLEAR SCREEN</WidgetName>
+                <WidgetID>4</WidgetID>
+                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+            </Widget>
+            <Track></Track>
+        </Mapping>
+    </Switches>
+    <SliderCurves>
+        <Mapping>
+            <Widget>
+                <WidgetName>MIN Z</WidgetName>
+                <WidgetID>25</WidgetID>
+                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+            </Widget>
+            <Track></Track>
+        </Mapping>
+        <Mapping>
+            <Widget>
+                <WidgetName>MIN ALPHA</WidgetName>
+                <WidgetID>29</WidgetID>
+                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+            </Widget>
+            <Track></Track>
+        </Mapping>
+        <Mapping>
+            <Widget>
+                <WidgetName>TYPE SPEED</WidgetName>
+                <WidgetID>2</WidgetID>
+                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+            </Widget>
+            <Track></Track>
+        </Mapping>
+    </SliderCurves>
+    <NumberDialerCurves></NumberDialerCurves>
+</Map>
