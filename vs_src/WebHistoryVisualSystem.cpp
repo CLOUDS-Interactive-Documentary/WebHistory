@@ -119,8 +119,8 @@ void WebHistoryVisualSystem::selfSetup()
 {
     // Load fonts.
     listColor.set(255, 128, 64);  // Pick a non-gray color so that HSB gets set properly.
-    listFont.loadFont("GUI/NewMedia Fett.ttf", 12);
-    HistoryNode::font.loadFont("GUI/NewMedia Fett.ttf", 12, true, true, true);
+    listFont.loadFont("Andale Mono.ttf", 12);
+    HistoryNode::font.loadFont("Andale Mono.ttf", 12, true, true, true);
     
     // Set defaults.
     currSpin = 0.0f;
