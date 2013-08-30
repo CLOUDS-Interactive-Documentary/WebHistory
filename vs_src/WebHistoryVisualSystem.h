@@ -116,6 +116,7 @@ protected:
     int currSearchTermIdx;
     int topSearchTermIdx;
     int searchTermCount;
+    bool bClearScreen;
     
     map< string, HistoryNode *> hosts;
     vector<HistoryNode *> orderedNodes;

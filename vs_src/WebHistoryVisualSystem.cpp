@@ -17,7 +17,16 @@ void WebHistoryVisualSystem::selfSetupGui()
 	customGui->setName("WEB_HISTORY");
 	customGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
 	
-    customGui->addSlider("TYPE SPEED", 1, 500, &typeSpeed);
+    customGui->addSlider("TYPE SPEED", 1, 100, &typeSpeed);
+    customGui->addToggle("CLEAR SCREEN", &bClearScreen);
+    
+    customGui->addSpacer();
+    customGui->addSlider("LINE HUE", 0.0, 1.0, HistoryNode::lineColor.getHue());
+    customGui->addSlider("LINE SAT", 0.0, 1.0, HistoryNode::lineColor.getSaturation());
+    customGui->addSlider("LINE BRI", 0.0, 1.0, HistoryNode::lineColor.getBrightness());
+    customGui->addSlider("LINE ALPHA", 0.0, 1.0, HistoryNode::lineColor.a);
+    
+	customGui->addSpacer();
     customGui->addSlider("SPIN SPEED", 0, 5, &spinSpeed);
     customGui->addSlider("LEVEL DEPTH", 1, 100, &HistoryNode::levelDepth);
 	customGui->addSlider("NOISE STEP", 0, 0.1, &HistoryNode::noiseStep);
@@ -27,25 +36,20 @@ void WebHistoryVisualSystem::selfSetupGui()
     customGui->addSlider("MIN Z", -2000.0, 0.0, &HistoryNode::minZ);
     customGui->addSlider("MAX Z", 0.0, 2000.0, &HistoryNode::maxZ);
     customGui->addSlider("MIN ALPHA", 0.0, 1.0, &HistoryNode::minAlpha);
-
     
     customGui->addSpacer();
     customGui->addSlider("LIST HUE", 0.0, 1.0, listColor.getHue());
     customGui->addSlider("LIST SAT", 0.0, 1.0, listColor.getSaturation());
     customGui->addSlider("LIST BRI", 0.0, 1.0, listColor.getBrightness());
     customGui->addSlider("LIST ALPHA", 0.0, 1.0, listColor.a);
+    
     customGui->addSpacer();
     customGui->addSlider("NODE HUE", 0.0, 1.0, HistoryNode::textColor.getHue());
     customGui->addSlider("NODE SAT", 0.0, 1.0, HistoryNode::textColor.getSaturation());
     customGui->addSlider("NODE BRI", 0.0, 1.0, HistoryNode::textColor.getBrightness());
     customGui->addSlider("NODE ALPHA", 0.0, 1.0, HistoryNode::textColor.a);
-    customGui->addSpacer();
-    customGui->addSlider("LINE HUE", 0.0, 1.0, HistoryNode::lineColor.getHue());
-    customGui->addSlider("LINE SAT", 0.0, 1.0, HistoryNode::lineColor.getSaturation());
-    customGui->addSlider("LINE BRI", 0.0, 1.0, HistoryNode::lineColor.getBrightness());
-    customGui->addSlider("LINE ALPHA", 0.0, 1.0, HistoryNode::lineColor.a);
     
-	ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
+    ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
 	
 	guis.push_back(customGui);
 	guimap[customGui->getName()] = customGui;
@@ -126,6 +130,7 @@ void WebHistoryVisualSystem::selfSetup()
     currSpin = 0.0f;
     spinSpeed = 0.5f;
     typeSpeed = 10;
+    bClearScreen = false;
     
     if (fetchChromeHistory()) {
         ofLogNotice("VSWebHistory") << "Using live Chrome data" << endl;
@@ -353,18 +358,27 @@ void WebHistoryVisualSystem::selfDrawBackground()
     int stringHeight = 20;
     int maxNumStrings = ofGetHeight() / stringHeight;
     
-    if (searchTerms[currSearchTermIdx]->isDone()) {
-        // Start rendering the next term.
-        currSearchTermIdx = (currSearchTermIdx + 1) % searchTerms.size();
-        searchTerms[currSearchTermIdx]->reset(typeSpeed);
-        
-        // Go to the next line.
-        ++searchTermCount;
-        if (searchTermCount > maxNumStrings) {
-            searchTermCount = maxNumStrings;
-
+    if (bClearScreen) {
+        if (searchTermCount > 0 && (ofGetFrameNum() % (int)typeSpeed == 0)) {
             // Scroll up.
             topSearchTermIdx = (topSearchTermIdx + 1) % searchTerms.size();
+            --searchTermCount;
+        }
+    }
+    else {
+        if (searchTerms[currSearchTermIdx]->isDone()) {
+            // Start rendering the next term.
+            currSearchTermIdx = (currSearchTermIdx + 1) % searchTerms.size();
+            searchTerms[currSearchTermIdx]->reset(typeSpeed);
+            
+            // Go to the next line.
+            ++searchTermCount;
+            if (searchTermCount > maxNumStrings) {
+                searchTermCount = maxNumStrings;
+
+                // Scroll up.
+                topSearchTermIdx = (topSearchTermIdx + 1) % searchTerms.size();
+            }
         }
     }
     
