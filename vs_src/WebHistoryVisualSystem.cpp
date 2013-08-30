@@ -39,12 +39,6 @@ void WebHistoryVisualSystem::selfSetupGui()
     customGui->addSlider("LINE BRI", 0.0, 1.0, HistoryNode::lineColor.getBrightness());
     customGui->addSlider("LINE ALPHA", 0.0, 1.0, HistoryNode::lineColor.a);
     
-    customGui->addSpacer();
-    customGui->addLabel("DOF");
-    customGui->addSlider("APERTURE", 0, 1, &dofPass->getApertureRef());
-    customGui->addSlider("FOCUS", 0, 1, &dofPass->getFocusRef());
-    customGui->addSlider("MAX BLUR", 0, 1, &dofPass->getMaxBlurRef());
-    
 	ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
 	
 	guis.push_back(customGui);
@@ -142,11 +136,6 @@ void WebHistoryVisualSystem::selfSetup()
     else {
         ofLogError("VSWebHistory") << "No available web history!" << endl;
     }
-    
-    // Setup post-processing chain
-    postProcessing.init(ofGetWidth(), ofGetHeight());
-//    postProcessing.createPass<FxaaPass>();
-    dofPass = postProcessing.createPass<DofPass>();
 }
 
 //--------------------------------------------------------------
@@ -337,19 +326,10 @@ void WebHistoryVisualSystem::selfUpdate()
 // you can change the camera by returning getCameraRef()
 void WebHistoryVisualSystem::selfDraw()
 {
-//    postProcessing.begin(getCameraRef());
-    
-//    ofClear(128, 0);  // NO ALPHA!!!! FUCK!
-
     ofRotate(currSpin, 0, 1, 0);
     for (auto& it: hosts) {
         it.second->draw();
     }
-    
-//    postProcessing.end();
-    
-//    ofSetColor(ofColor::green);
-//    ofCircle(ofGetWidth() * 0.75, ofGetHeight() * 0.5, 50);
 }
 
 // draw any debug stuff here
