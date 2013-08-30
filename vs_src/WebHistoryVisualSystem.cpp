@@ -176,7 +176,7 @@ bool WebHistoryVisualSystem::fetchChromeHistory(bool bUseSample)
     }
     
     int count = 0;
-	while (sel.hasNext() && count < 50) {
+	while (sel.hasNext() && count < 100) {
         string url = sel.getString();
         time_t timestamp = sel.getInt();
         
@@ -213,7 +213,7 @@ bool WebHistoryVisualSystem::fetchChromeHistory(bool bUseSample)
                 .execute().begin();
     
     count = 0;
-	while (sel.hasNext() && count < 50) {
+	while (sel.hasNext() && count < 100) {
         string url = sel.getString();
         ofxTextWriter * term = new ofxTextWriter(url);
         searchTerms.push_back(term);
