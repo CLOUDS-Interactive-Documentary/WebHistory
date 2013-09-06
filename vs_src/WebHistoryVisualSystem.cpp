@@ -354,6 +354,11 @@ void WebHistoryVisualSystem::selfDrawDebug()
 // or you can use selfDrawBackground to do 2D drawings that don't use the 3D camera
 void WebHistoryVisualSystem::selfDrawBackground()
 {
+    if (searchTerms.empty()) {
+        // Nothing to do here.
+        return;
+    }
+    
     ofSetColor(listColor);
     
     int stringHeight = 20;
