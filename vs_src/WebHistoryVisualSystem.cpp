@@ -164,6 +164,7 @@ bool WebHistoryVisualSystem::fetchChromeHistory(bool bUseSample)
     ofxSQLite sqlite;
     if (!sqlite.setup(chromeHistoryPath)) {
         // No dice :(
+        ofLogError("VSWebHistory") << "couldn't load " << (bUseSample ? "sample " : "actual") << " database";
         return false;
     }
     	
