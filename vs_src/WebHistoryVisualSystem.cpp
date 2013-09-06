@@ -136,12 +136,12 @@ void WebHistoryVisualSystem::selfSetup()
     if (fetchChromeHistory()) {
         ofLogNotice("VSWebHistory") << "Using live Chrome data" << endl;
     }
-    else if (fetchSafariHistory()) {
-        ofLogNotice("VSWebHistory") << "Using live Safari data" << endl;
-    }
-    else if (fetchFirefoxHistory()) {
-        ofLogNotice("VSWebHistory") << "Using live Firefox data" << endl;
-    }
+//    else if (fetchSafariHistory()) {
+//        ofLogNotice("VSWebHistory") << "Using live Safari data" << endl;
+//    }
+//    else if (fetchFirefoxHistory()) {
+//        ofLogNotice("VSWebHistory") << "Using live Firefox data" << endl;
+//    }
     else if (fetchChromeHistory(true)) {
         ofLogNotice("VSWebHistory") << "Using sample Chrome data" << endl;
     }
