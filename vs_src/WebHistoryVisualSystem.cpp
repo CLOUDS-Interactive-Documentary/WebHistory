@@ -372,7 +372,7 @@ void WebHistoryVisualSystem::selfDrawBackground()
         }
     }
     else {
-        if (currSearchTermIdx < searchTerms.size() && searchTerms[currSearchTermIdx]->isDone()) {
+        if (searchTerms[currSearchTermIdx]->isDone()) {
             // Start rendering the next term.
             currSearchTermIdx = (currSearchTermIdx + 1) % searchTerms.size();
             searchTerms[currSearchTermIdx]->reset(typeSpeed);
