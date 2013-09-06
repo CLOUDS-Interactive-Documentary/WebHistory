@@ -26,7 +26,7 @@ class WebHistoryVisualSystem : public CloudsVisualSystem
 	//This determines your data path so name it at first!
 	//ie getVisualSystemDataPath() uses this
     string getSystemName() {
-		return "WebHistorySystem";
+		return "WebHistory";
 	}
 
 	//These methods let us add custom GUI parameters and respond to their events
