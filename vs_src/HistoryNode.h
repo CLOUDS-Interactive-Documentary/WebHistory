@@ -30,6 +30,9 @@ public:
     static ofColor textColor;
     static ofColor lineColor;
     
+    static ofColor nodeColor;
+    static float nodeRadius;
+
     static float minZ;
     static float maxZ;
     static float minAlpha;

@@ -98,6 +98,26 @@ void WebHistoryVisualSystem::selfSetupGui()
     extruders.push_back(lineAlpha);
     treeGui->addSlider("LINE ALPHA", 0.0, 255.0, lineAlpha->getPosPtr());
     
+    treeGui->addSpacer();
+    treeGui->addSlider("NODE RADIUS", 0.0, 20.0, &HistoryNode::nodeRadius);
+    nodeHue = new ofx1DExtruder(0);
+    nodeHue->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(nodeHue);
+    treeGui->addSlider("NODE HUE", 0.0, 255.0, nodeHue->getPosPtr());
+    nodeSat = new ofx1DExtruder(0);
+    nodeSat->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(nodeSat);
+    treeGui->addSlider("NODE SAT", 0.0, 255.0, nodeSat->getPosPtr());
+    nodeBri = new ofx1DExtruder(0);
+    nodeBri->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(nodeBri);
+    treeGui->addSlider("NODE BRI", 0.0, 255.0, nodeBri->getPosPtr());
+    nodeAlpha = new ofx1DExtruder(0);
+    nodeAlpha->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(nodeAlpha);
+    treeGui->addSlider("NODE ALPHA", 0.0, 255.0, nodeAlpha->getPosPtr());
+
+    ofAddListener(treeGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
 	
 	guis.push_back(treeGui);
 	guimap[treeGui->getName()] = treeGui;
@@ -143,6 +163,19 @@ void WebHistoryVisualSystem::selfGuiEvent(ofxUIEventArgs &e)
 	}
     else if (e.widget->getName() == "LINE ALPHA") {
         lineAlpha->setPosAndHome(lineAlpha->getPos());
+    }
+    
+    else if (e.widget->getName() == "NODE HUE") {
+        nodeHue->setPosAndHome(nodeHue->getPos());
+	}
+    else if (e.widget->getName() == "NODE SAT") {
+        nodeSat->setPosAndHome(nodeSat->getPos());
+	}
+    else if (e.widget->getName() == "NODE BRI") {
+        nodeBri->setPosAndHome(nodeBri->getPos());
+	}
+    else if (e.widget->getName() == "NODE ALPHA") {
+        nodeAlpha->setPosAndHome(nodeAlpha->getPos());
     }
 }
 
@@ -383,6 +416,7 @@ void WebHistoryVisualSystem::selfUpdate()
     listColor.setHsb(listHue->getPos(), listSat->getPos(), listBri->getPos(), listAlpha->getPos());
     HistoryNode::textColor.setHsb(textHue->getPos(), textSat->getPos(), textBri->getPos(), textAlpha->getPos());
     HistoryNode::lineColor.setHsb(lineHue->getPos(), lineSat->getPos(), lineBri->getPos(), lineAlpha->getPos());
+    HistoryNode::nodeColor.setHsb(nodeHue->getPos(), nodeSat->getPos(), nodeBri->getPos(), nodeAlpha->getPos());
     
     currSpin += spinSpeed;
 }

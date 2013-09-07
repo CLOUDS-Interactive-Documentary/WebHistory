@@ -13,6 +13,9 @@ ofTrueTypeFont HistoryNode::font;
 ofColor HistoryNode::textColor(255);
 ofColor HistoryNode::lineColor(128);
 
+ofColor HistoryNode::nodeColor(128);
+float HistoryNode::nodeRadius = 5;
+
 float HistoryNode::minZ = -1000;
 float HistoryNode::maxZ = 0;
 float HistoryNode::minAlpha = 0;
@@ -73,6 +76,9 @@ ofPoint HistoryNode::draw()
     {
         float z = billboard();
         alpha = ofMap(z, minZ, maxZ, minAlpha * 255, 255, true);
+        
+        ofSetColor(nodeColor, alpha);
+        ofSphere(0, 0, 0, nodeRadius);
         
         ofScale(1, -1, 1);
         ofSetColor(textColor, alpha);
