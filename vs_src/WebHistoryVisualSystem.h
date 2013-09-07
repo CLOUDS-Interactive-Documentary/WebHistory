@@ -110,7 +110,11 @@ protected:
     ofTrueTypeFont listFont;
     ofColor listColor;
 	
-	ofxUISuperCanvas* customGui;
+	ofxUISuperCanvas * listGui, * treeGui;
+    ofx1DExtruder * listHue, * listSat, * listBri, * listAlpha;
+    ofx1DExtruder * textHue, * textSat, * textBri, * textAlpha;
+	ofx1DExtruder * lineHue, * lineSat, * lineBri, * lineAlpha;
+	ofx1DExtruder * nodeHue, * nodeSat, * nodeBri, * nodeAlpha;
 	
     vector<ofxTextWriter *> searchTerms;
     int currSearchTermIdx;

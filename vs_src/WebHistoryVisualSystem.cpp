@@ -11,90 +11,138 @@
 //These methods let us add custom GUI parameters and respond to their events
 void WebHistoryVisualSystem::selfSetupGui()
 {
-	customGui = new ofxUISuperCanvas("WEB HISTORY", gui);
-	customGui->copyCanvasStyle(gui);
-	customGui->copyCanvasProperties(gui);
-	customGui->setName("WEB_HISTORY");
-	customGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
+	listGui = new ofxUISuperCanvas("SEARCH TERM LIST", gui);
+	listGui->copyCanvasStyle(gui);
+	listGui->copyCanvasProperties(gui);
+	listGui->setName("SEARCH_TERM_LIST");
+	listGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
 	
-    customGui->addSlider("TYPE SPEED", 1, 100, &typeSpeed);
-    customGui->addToggle("CLEAR SCREEN", &bClearScreen);
+    listGui->addSpacer();
+    listGui->addSlider("TYPE SPEED", 1, 100, &typeSpeed);
+    listGui->addToggle("CLEAR SCREEN", &bClearScreen);
     
-    customGui->addSpacer();
-    customGui->addSlider("LINE HUE", 0.0, 1.0, HistoryNode::lineColor.getHue());
-    customGui->addSlider("LINE SAT", 0.0, 1.0, HistoryNode::lineColor.getSaturation());
-    customGui->addSlider("LINE BRI", 0.0, 1.0, HistoryNode::lineColor.getBrightness());
-    customGui->addSlider("LINE ALPHA", 0.0, 1.0, HistoryNode::lineColor.a);
+    listGui->addSpacer();
+    listGui->addLabel("TEXT");
+    listHue = new ofx1DExtruder(0);
+    listHue->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(listHue);
+    listGui->addSlider("LIST HUE", 0.0, 255.0, listHue->getPosPtr());
+    listSat = new ofx1DExtruder(0);
+    listSat->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(listSat);
+    listGui->addSlider("LIST SAT", 0.0, 255.0, listSat->getPosPtr());
+    listBri = new ofx1DExtruder(0);
+    listBri->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(listBri);
+    listGui->addSlider("LIST BRI", 0.0, 255.0, listBri->getPosPtr());
+    listAlpha = new ofx1DExtruder(0);
+    listAlpha->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(listAlpha);
+    listGui->addSlider("LIST ALPHA", 0.0, 255.0, listAlpha->getPosPtr());
     
-	customGui->addSpacer();
-    customGui->addSlider("SPIN SPEED", 0, 5, &spinSpeed);
-    customGui->addSlider("LEVEL DEPTH", 1, 100, &HistoryNode::levelDepth);
-	customGui->addSlider("NOISE STEP", 0, 0.1, &HistoryNode::noiseStep);
-	customGui->addSlider("NOISE AMOUNT", 1, 10, &HistoryNode::noiseAmount);
-    
-    customGui->addSpacer();
-    customGui->addSlider("MIN Z", -2000.0, 0.0, &HistoryNode::minZ);
-    customGui->addSlider("MAX Z", 0.0, 2000.0, &HistoryNode::maxZ);
-    customGui->addSlider("MIN ALPHA", 0.0, 1.0, &HistoryNode::minAlpha);
-    
-    customGui->addSpacer();
-    customGui->addSlider("LIST HUE", 0.0, 1.0, listColor.getHue());
-    customGui->addSlider("LIST SAT", 0.0, 1.0, listColor.getSaturation());
-    customGui->addSlider("LIST BRI", 0.0, 1.0, listColor.getBrightness());
-    customGui->addSlider("LIST ALPHA", 0.0, 1.0, listColor.a);
-    
-    customGui->addSpacer();
-    customGui->addSlider("NODE HUE", 0.0, 1.0, HistoryNode::textColor.getHue());
-    customGui->addSlider("NODE SAT", 0.0, 1.0, HistoryNode::textColor.getSaturation());
-    customGui->addSlider("NODE BRI", 0.0, 1.0, HistoryNode::textColor.getBrightness());
-    customGui->addSlider("NODE ALPHA", 0.0, 1.0, HistoryNode::textColor.a);
-    
-    ofAddListener(customGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
+    ofAddListener(listGui->newGUIEvent, this, &WebHistoryVisualSystem::selfGuiEvent);
 	
-	guis.push_back(customGui);
-	guimap[customGui->getName()] = customGui;
+	guis.push_back(listGui);
+	guimap[listGui->getName()] = listGui;
+    
+    treeGui = new ofxUISuperCanvas("URL TREE", gui);
+	treeGui->copyCanvasStyle(gui);
+	treeGui->copyCanvasProperties(gui);
+	treeGui->setName("URL_TREE");
+	treeGui->setWidgetFontSize(OFX_UI_FONT_SMALL);
+    
+    treeGui->addSpacer();
+    treeGui->addSlider("LEVEL DEPTH", 1, 100, &HistoryNode::levelDepth);
+    treeGui->addSlider("SPIN SPEED", 0, 5, &spinSpeed);
+	treeGui->addSlider("NOISE STEP", 0, 0.1, &HistoryNode::noiseStep);
+	treeGui->addSlider("NOISE AMOUNT", 1, 10, &HistoryNode::noiseAmount);
+    treeGui->addSpacer();
+    treeGui->addSlider("MIN Z", -2000.0, 0.0, &HistoryNode::minZ);
+    treeGui->addSlider("MAX Z", 0.0, 2000.0, &HistoryNode::maxZ);
+    treeGui->addSlider("MIN ALPHA", 0.0, 1.0, &HistoryNode::minAlpha);
+
+    treeGui->addSpacer();
+    treeGui->addLabel("TEXT");
+    textHue = new ofx1DExtruder(0);
+    textHue->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(textHue);
+    treeGui->addSlider("TEXT HUE", 0.0, 255.0, textHue->getPosPtr());
+    textSat = new ofx1DExtruder(0);
+    textSat->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(textSat);
+    treeGui->addSlider("TEXT SAT", 0.0, 255.0, textSat->getPosPtr());
+    textBri = new ofx1DExtruder(0);
+    textBri->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(textBri);
+    treeGui->addSlider("TEXT BRI", 0.0, 255.0, textBri->getPosPtr());
+    textAlpha = new ofx1DExtruder(0);
+    textAlpha->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(textAlpha);
+    treeGui->addSlider("TEXT ALPHA", 0.0, 255.0, textAlpha->getPosPtr());
+    
+    treeGui->addSpacer();
+    lineHue = new ofx1DExtruder(0);
+    lineHue->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(lineHue);
+    treeGui->addSlider("LINE HUE", 0.0, 255.0, lineHue->getPosPtr());
+    lineSat = new ofx1DExtruder(0);
+    lineSat->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(lineSat);
+    treeGui->addSlider("LINE SAT", 0.0, 255.0, lineSat->getPosPtr());
+    lineBri = new ofx1DExtruder(0);
+    lineBri->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(lineBri);
+    treeGui->addSlider("LINE BRI", 0.0, 255.0, lineBri->getPosPtr());
+    lineAlpha = new ofx1DExtruder(0);
+    lineAlpha->setPhysics(0.95, 5.0, 25.0);
+    extruders.push_back(lineAlpha);
+    treeGui->addSlider("LINE ALPHA", 0.0, 255.0, lineAlpha->getPosPtr());
+    
+	
+	guis.push_back(treeGui);
+	guimap[treeGui->getName()] = treeGui;
 }
 
 //--------------------------------------------------------------
 void WebHistoryVisualSystem::selfGuiEvent(ofxUIEventArgs &e)
 {
     if (e.widget->getName() == "LIST HUE") {
-        listColor.setHue(((ofxUISlider *)e.widget)->getValue() * 255);
+        listHue->setPosAndHome(listHue->getPos());
 	}
     else if (e.widget->getName() == "LIST SAT") {
-        listColor.setSaturation(((ofxUISlider *)e.widget)->getValue() * 255);
+        listSat->setPosAndHome(listSat->getPos());
 	}
     else if (e.widget->getName() == "LIST BRI") {
-        listColor.setBrightness(((ofxUISlider *)e.widget)->getValue() * 255);
+        listBri->setPosAndHome(listBri->getPos());
 	}
     else if (e.widget->getName() == "LIST ALPHA") {
-        listColor.a = ((ofxUISlider *)e.widget)->getValue() * 255;
+        listAlpha->setPosAndHome(listAlpha->getPos());
     }
     
-    else if (e.widget->getName() == "NODE HUE") {
-        HistoryNode::textColor.setHue(((ofxUISlider *)e.widget)->getValue() * 255);
+    else if (e.widget->getName() == "TEXT HUE") {
+        textHue->setPosAndHome(textHue->getPos());
 	}
-    else if (e.widget->getName() == "NODE SAT") {
-        HistoryNode::textColor.setSaturation(((ofxUISlider *)e.widget)->getValue() * 255);
+    else if (e.widget->getName() == "TEXT SAT") {
+        textSat->setPosAndHome(textSat->getPos());
 	}
-    else if (e.widget->getName() == "NODE BRI") {
-        HistoryNode::textColor.setBrightness(((ofxUISlider *)e.widget)->getValue() * 255);
+    else if (e.widget->getName() == "TEXT BRI") {
+        textBri->setPosAndHome(textBri->getPos());
 	}
-    else if (e.widget->getName() == "NODE ALPHA") {
-        HistoryNode::textColor.a = ((ofxUISlider *)e.widget)->getValue() * 255;
+    else if (e.widget->getName() == "TEXT ALPHA") {
+        textAlpha->setPosAndHome(textAlpha->getPos());
     }
     
     else if (e.widget->getName() == "LINE HUE") {
-        HistoryNode::lineColor.setHue(((ofxUISlider *)e.widget)->getValue() * 255);
+        lineHue->setPosAndHome(lineHue->getPos());
 	}
     else if (e.widget->getName() == "LINE SAT") {
-        HistoryNode::lineColor.setSaturation(((ofxUISlider *)e.widget)->getValue() * 255);
+        lineSat->setPosAndHome(lineSat->getPos());
 	}
     else if (e.widget->getName() == "LINE BRI") {
-        HistoryNode::lineColor.setBrightness(((ofxUISlider *)e.widget)->getValue() * 255);
+        lineBri->setPosAndHome(lineBri->getPos());
 	}
     else if (e.widget->getName() == "LINE ALPHA") {
-        HistoryNode::lineColor.a = ((ofxUISlider *)e.widget)->getValue() * 255;
+        lineAlpha->setPosAndHome(lineAlpha->getPos());
     }
 }
 
@@ -331,6 +379,11 @@ void WebHistoryVisualSystem::selfSceneTransformation(){
 //normal update call
 void WebHistoryVisualSystem::selfUpdate()
 {
+    // Update the extruders parameters.
+    listColor.setHsb(listHue->getPos(), listSat->getPos(), listBri->getPos(), listAlpha->getPos());
+    HistoryNode::textColor.setHsb(textHue->getPos(), textSat->getPos(), textBri->getPos(), textAlpha->getPos());
+    HistoryNode::lineColor.setHsb(lineHue->getPos(), lineSat->getPos(), lineBri->getPos(), lineAlpha->getPos());
+    
     currSpin += spinSpeed;
 }
 
