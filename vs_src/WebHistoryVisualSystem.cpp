@@ -22,7 +22,6 @@ void WebHistoryVisualSystem::selfSetupGui()
     listGui->addToggle("CLEAR SCREEN", &bClearScreen);
     
     listGui->addSpacer();
-    listGui->addLabel("TEXT");
     listHue = new ofx1DExtruder(0);
     listHue->setPhysics(0.95, 5.0, 25.0);
     extruders.push_back(listHue);
@@ -62,7 +61,6 @@ void WebHistoryVisualSystem::selfSetupGui()
     treeGui->addSlider("MIN ALPHA", 0.0, 1.0, &HistoryNode::minAlpha);
 
     treeGui->addSpacer();
-    treeGui->addLabel("TEXT");
     treeGui->addSlider("TEXT ALIGN X", -1.0, 1.0, &HistoryNode::textAlignX);
     treeGui->addSlider("TEXT ALIGN Y", -1.0, 1.0, &HistoryNode::textAlignY);
     textHue = new ofx1DExtruder(0);
