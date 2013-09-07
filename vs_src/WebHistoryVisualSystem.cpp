@@ -237,14 +237,21 @@ bool WebHistoryVisualSystem::fetchChromeHistory(bool bUseSample)
     string chromeHistoryPath;
     if (bUseSample) {
         chromeHistoryPath = getVisualSystemDataPath() + "SampleChromeHistory";
+//		chromeHistoryPath = "SampleChromeHistory";
     }
     else {
         chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
     }
-    
+
+    if(!ofFile(chromeHistoryPath).doesFileExist(chromeHistoryPath)){
+        ofLogError("VSWebHistory") << " " << (bUseSample ? "sample " : "actual") << " database file does not exist at path " << chromeHistoryPath;
+        return false;
+	}
+	
     ofxSQLite sqlite;
     if (!sqlite.setup(chromeHistoryPath)) {
         // No dice :(
+        ofLogError("VSWebHistory") << "couldn't load " << (bUseSample ? "sample " : "actual") << " database at path " << chromeHistoryPath;
         return false;
     }
     	
