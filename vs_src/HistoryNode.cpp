@@ -11,6 +11,9 @@
 //--------------------------------------------------------------
 ofTrueTypeFont HistoryNode::font;
 ofColor HistoryNode::textColor(255);
+float HistoryNode::textAlignX = 0;
+float HistoryNode::textAlignY = 0;
+
 ofColor HistoryNode::lineColor(128);
 
 ofColor HistoryNode::nodeColor(128);
@@ -82,8 +85,9 @@ ofPoint HistoryNode::draw()
         
         ofScale(1, -1, 1);
         ofSetColor(textColor, alpha);
-//            font.drawString(_name, -_textWidth / 2.0f, _textHeight / 2.0f);
-        font.drawStringAsShapes(_name, -_textWidth / 2.0f, _textHeight / 2.0f);
+        float widthOffset = (_textWidth / 2.0f + nodeRadius * 2) * textAlignX;
+        float heightOffset = (_textHeight / 2.0f + nodeRadius * 2) * textAlignY;
+        font.drawStringAsShapes(_name, -_textWidth / 2.0f + widthOffset, _textHeight / 2.0f + heightOffset);
     }
     ofPopMatrix();
     

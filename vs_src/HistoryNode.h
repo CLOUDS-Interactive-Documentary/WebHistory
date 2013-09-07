@@ -28,6 +28,9 @@ public:
     
     static ofTrueTypeFont font;
     static ofColor textColor;
+    static float textAlignX;
+    static float textAlignY;
+    
     static ofColor lineColor;
     
     static ofColor nodeColor;
