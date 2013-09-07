@@ -122,9 +122,10 @@ void WebHistoryVisualSystem::guiRenderEvent(ofxUIEventArgs &e){
 void WebHistoryVisualSystem::selfSetup()
 {
     // Load fonts.
+
     listColor.set(255, 128, 64);  // Pick a non-gray color so that HSB gets set properly.
-    listFont.loadFont("Andale Mono.ttf", 12);
-    HistoryNode::font.loadFont("GUI/NewMedia Fett.ttf", 12, true, true, true);
+    listFont.loadFont(getVisualSystemDataPath() + "Andale Mono.ttf", 12);
+    HistoryNode::font.loadFont(getVisualSystemDataPath() + "Andale Mono.ttf", 12, true, true, true);
     
     // Set defaults.
     currSpin = 0.0f;
@@ -135,12 +136,12 @@ void WebHistoryVisualSystem::selfSetup()
     if (fetchChromeHistory()) {
         ofLogNotice("VSWebHistory") << "Using live Chrome data" << endl;
     }
-    else if (fetchSafariHistory()) {
-        ofLogNotice("VSWebHistory") << "Using live Safari data" << endl;
-    }
-    else if (fetchFirefoxHistory()) {
-        ofLogNotice("VSWebHistory") << "Using live Firefox data" << endl;
-    }
+//    else if (fetchSafariHistory()) {
+//        ofLogNotice("VSWebHistory") << "Using live Safari data" << endl;
+//    }
+//    else if (fetchFirefoxHistory()) {
+//        ofLogNotice("VSWebHistory") << "Using live Firefox data" << endl;
+//    }
     else if (fetchChromeHistory(true)) {
         ofLogNotice("VSWebHistory") << "Using sample Chrome data" << endl;
     }
@@ -155,14 +156,21 @@ bool WebHistoryVisualSystem::fetchChromeHistory(bool bUseSample)
     string chromeHistoryPath;
     if (bUseSample) {
         chromeHistoryPath = getVisualSystemDataPath() + "SampleChromeHistory";
+//		chromeHistoryPath = "SampleChromeHistory";
     }
     else {
         chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
     }
-    
+
+    if(!ofFile(chromeHistoryPath).doesFileExist(chromeHistoryPath)){
+        ofLogError("VSWebHistory") << " " << (bUseSample ? "sample " : "actual") << " database file does not exist at path " << chromeHistoryPath;
+        return false;
+	}
+	
     ofxSQLite sqlite;
     if (!sqlite.setup(chromeHistoryPath)) {
         // No dice :(
+        ofLogError("VSWebHistory") << "couldn't load " << (bUseSample ? "sample " : "actual") << " database at path " << chromeHistoryPath;
         return false;
     }
     	
@@ -353,6 +361,11 @@ void WebHistoryVisualSystem::selfDrawDebug()
 // or you can use selfDrawBackground to do 2D drawings that don't use the 3D camera
 void WebHistoryVisualSystem::selfDrawBackground()
 {
+    if (searchTerms.empty()) {
+        // Nothing to do here.
+        return;
+    }
+    
     ofSetColor(listColor);
     
     int stringHeight = 20;
