@@ -203,7 +203,6 @@ void WebHistoryVisualSystem::guiRenderEvent(ofxUIEventArgs &e){
 void WebHistoryVisualSystem::selfSetup()
 {
     // Load fonts.
-
     listColor.set(255, 128, 64);  // Pick a non-gray color so that HSB gets set properly.
     listFont.loadFont(getVisualSystemDataPath() + "Andale Mono.ttf", 12);
     HistoryNode::font.loadFont(getVisualSystemDataPath() + "Andale Mono.ttf", 12, true, true, true);
@@ -237,21 +236,20 @@ bool WebHistoryVisualSystem::fetchChromeHistory(bool bUseSample)
     string chromeHistoryPath;
     if (bUseSample) {
         chromeHistoryPath = getVisualSystemDataPath() + "SampleChromeHistory";
-//		chromeHistoryPath = "SampleChromeHistory";
     }
     else {
         chromeHistoryPath = ofFilePath::getUserHomeDir() + "/Library/Application Support/Google/Chrome/Default/History";
     }
 
     if(!ofFile(chromeHistoryPath).doesFileExist(chromeHistoryPath)){
-        ofLogError("VSWebHistory") << " " << (bUseSample ? "sample " : "actual") << " database file does not exist at path " << chromeHistoryPath;
+        ofLogError("VSWebHistory") << (bUseSample ? "Sample " : "Actual") << " database file does not exist at path " << chromeHistoryPath;
         return false;
 	}
 	
     ofxSQLite sqlite;
     if (!sqlite.setup(chromeHistoryPath)) {
         // No dice :(
-        ofLogError("VSWebHistory") << "couldn't load " << (bUseSample ? "sample " : "actual") << " database at path " << chromeHistoryPath;
+        ofLogError("VSWebHistory") << "Couldn't load " << (bUseSample ? "sample " : "actual") << " database at path " << chromeHistoryPath;
         return false;
     }
     	
