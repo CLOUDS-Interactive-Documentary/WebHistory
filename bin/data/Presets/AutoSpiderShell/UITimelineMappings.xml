@@ -4,8 +4,8 @@
         <Mapping>
             <Widget>
                 <WidgetName>CLEAR SCREEN</WidgetName>
-                <WidgetID>4</WidgetID>
-                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+                <WidgetID>5</WidgetID>
+                <WidgetCanvasParent>SEARCH_TERM_LIST</WidgetCanvasParent>
             </Widget>
             <Track></Track>
         </Mapping>
@@ -14,24 +14,24 @@
         <Mapping>
             <Widget>
                 <WidgetName>MIN Z</WidgetName>
-                <WidgetID>25</WidgetID>
-                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+                <WidgetID>12</WidgetID>
+                <WidgetCanvasParent>URL_TREE</WidgetCanvasParent>
             </Widget>
             <Track></Track>
         </Mapping>
         <Mapping>
             <Widget>
                 <WidgetName>MIN ALPHA</WidgetName>
-                <WidgetID>29</WidgetID>
-                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+                <WidgetID>16</WidgetID>
+                <WidgetCanvasParent>URL_TREE</WidgetCanvasParent>
             </Widget>
             <Track></Track>
         </Mapping>
         <Mapping>
             <Widget>
                 <WidgetName>TYPE SPEED</WidgetName>
-                <WidgetID>2</WidgetID>
-                <WidgetCanvasParent>WEB_HISTORY</WidgetCanvasParent>
+                <WidgetID>3</WidgetID>
+                <WidgetCanvasParent>SEARCH_TERM_LIST</WidgetCanvasParent>
             </Widget>
             <Track></Track>
         </Mapping>
