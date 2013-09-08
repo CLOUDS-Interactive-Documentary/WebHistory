@@ -13,6 +13,14 @@
     <SliderCurves>
         <Mapping>
             <Widget>
+                <WidgetName>TYPE SPEED</WidgetName>
+                <WidgetID>3</WidgetID>
+                <WidgetCanvasParent>SEARCH_TERM_LIST</WidgetCanvasParent>
+            </Widget>
+            <Track></Track>
+        </Mapping>
+        <Mapping>
+            <Widget>
                 <WidgetName>MIN Z</WidgetName>
                 <WidgetID>12</WidgetID>
                 <WidgetCanvasParent>URL_TREE</WidgetCanvasParent>
@@ -24,14 +32,6 @@
                 <WidgetName>MIN ALPHA</WidgetName>
                 <WidgetID>16</WidgetID>
                 <WidgetCanvasParent>URL_TREE</WidgetCanvasParent>
-            </Widget>
-            <Track></Track>
-        </Mapping>
-        <Mapping>
-            <Widget>
-                <WidgetName>TYPE SPEED</WidgetName>
-                <WidgetID>3</WidgetID>
-                <WidgetCanvasParent>SEARCH_TERM_LIST</WidgetCanvasParent>
             </Widget>
             <Track></Track>
         </Mapping>
