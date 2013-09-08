@@ -81,6 +81,7 @@ void WebHistoryVisualSystem::selfSetupGui()
     treeGui->addSlider("TEXT ALPHA", 0.0, 255.0, textAlpha->getPosPtr());
     
     treeGui->addSpacer();
+    treeGui->addSlider("LINE WIDTH", 0.1, 10.0, &HistoryNode::lineWidth);
     lineHue = new ofx1DExtruder(0);
     lineHue->setPhysics(0.95, 5.0, 25.0);
     extruders.push_back(lineHue);
