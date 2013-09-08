@@ -40,6 +40,7 @@ public:
     static float maxZ;
     static float minAlpha;
     
+    static float lineWidth;
     static float levelDepth;
     static float noiseStep;
     static float noiseAmount;

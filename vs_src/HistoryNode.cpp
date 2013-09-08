@@ -23,6 +23,7 @@ float HistoryNode::minZ = -1000;
 float HistoryNode::maxZ = 0;
 float HistoryNode::minAlpha = 0;
 
+float HistoryNode::lineWidth = 10;
 float HistoryNode::levelDepth = 100;
 float HistoryNode::noiseStep = 0.02;
 float HistoryNode::noiseAmount = 10;
@@ -102,7 +103,7 @@ ofPoint HistoryNode::draw()
         glVertex3f(childPoint.x, childPoint.y, childPoint.z);
         glEnd();
     }
-    
+        
     return worldPoint;
 }
 

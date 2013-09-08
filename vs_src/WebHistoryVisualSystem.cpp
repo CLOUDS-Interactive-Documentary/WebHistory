@@ -430,10 +430,18 @@ void WebHistoryVisualSystem::selfUpdate()
 // you can change the camera by returning getCameraRef()
 void WebHistoryVisualSystem::selfDraw()
 {
-    ofRotate(currSpin, 0, 1, 0);
-    for (auto& it: hosts) {
-        it.second->draw();
+    ofPushStyle();
+    ofPushMatrix();
+    {
+        ofRotate(currSpin, 0, 1, 0);
+        ofSetLineWidth(HistoryNode::lineWidth);
+
+        for (auto& it: hosts) {
+            it.second->draw();
+        }
     }
+    ofPopMatrix();
+    ofPopStyle();
 }
 
 // draw any debug stuff here
