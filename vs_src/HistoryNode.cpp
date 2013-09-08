@@ -28,6 +28,8 @@ float HistoryNode::levelDepth = 100;
 float HistoryNode::noiseStep = 0.02;
 float HistoryNode::noiseAmount = 10;
 
+vector<HistoryNode *> HistoryNode::allNodes;
+
 //--------------------------------------------------------------
 HistoryNode::HistoryNode(const string& segment, int timestamp, int level, list<string>& childSegments, float latitude, float longitude)
 : _name(segment)
@@ -38,7 +40,12 @@ HistoryNode::HistoryNode(const string& segment, int timestamp, int level, list<s
 {
     _textWidth = font.stringWidth(_name);
     _textHeight = font.stringHeight("a");  // ignore ascent/descent
-        
+    
+    alpha = 0;
+    parent = NULL;
+    
+    allNodes.push_back(this);
+
     addChild(childSegments, level + 1);
 }
 
@@ -54,14 +61,15 @@ void HistoryNode::addChild(list<string>& segments, int childLevel)
         }
         catch (const std::out_of_range& e) {
             HistoryNode * nextChild = new HistoryNode(nextSegment, _timestamp, childLevel, segments, _latitude + ofRandom(-10, 10), _longitude + ofRandom(-10, 10));
+            nextChild->parent = this;
             _children[nextSegment] = nextChild;
         }
     }
 }
 
 //--------------------------------------------------------------
-ofPoint HistoryNode::draw()
-{    
+void HistoryNode::update()
+{
     // Add some noise to the mix.
     _t = ofGetFrameNum() * noiseStep;
 	float latOffset = ofSignedNoise(_t + _latitude) * noiseAmount;
@@ -70,11 +78,15 @@ ofPoint HistoryNode::draw()
     ofQuaternion latRot, longRot, spinQuat;
     latRot.makeRotate(_latitude + latOffset, 1, 0, 0);
     longRot.makeRotate(_longitude + longOffset, 0, 1, 0);
-//    spinQuat.makeRotate(ofGetFrameNum(), 0, 1, 0);
+    //    spinQuat.makeRotate(ofGetFrameNum(), 0, 1, 0);
     
     ofVec3f center = ofVec3f(0, 0, levelDepth * (_level + 1));
-    ofVec3f worldPoint = latRot * longRot * spinQuat * center;
-    
+    worldPoint = latRot * longRot * spinQuat * center;
+}
+
+//--------------------------------------------------------------
+void HistoryNode::draw()
+{    
     ofPushMatrix();
     ofTranslate(worldPoint);
     {
@@ -93,18 +105,18 @@ ofPoint HistoryNode::draw()
     ofPopMatrix();
     
     for (auto& it : _children) {
-        ofPoint childPoint = it.second->draw();
+        it.second->draw();
         
-        // Use the node alphas when drawing the connecting lines.
-        glBegin(GL_LINE_STRIP);
-        ofSetColor(lineColor, alpha);
-        glVertex3f(worldPoint.x, worldPoint.y, worldPoint.z);
-        ofSetColor(lineColor, it.second->alpha);
-        glVertex3f(childPoint.x, childPoint.y, childPoint.z);
-        glEnd();
+        if (bHighlighted && it.second->bHighlighted) {
+            // Use the node alphas when drawing the connecting lines.
+            glBegin(GL_LINE_STRIP);
+            ofSetColor(lineColor, alpha);
+            glVertex3f(worldPoint.x, worldPoint.y, worldPoint.z);
+            ofSetColor(lineColor, it.second->alpha);
+            glVertex3f(it.second->worldPoint.x, it.second->worldPoint.y, it.second->worldPoint.z);
+            glEnd();
+        }
     }
-        
-    return worldPoint;
 }
 
 //--------------------------------------------------------------

@@ -122,8 +122,7 @@ protected:
     int searchTermCount;
     bool bClearScreen;
     
-    map< string, HistoryNode *> hosts;
-    vector<HistoryNode *> orderedNodes;
+    map<string, HistoryNode *> hosts;
     
     float currSpin;
     float spinSpeed;

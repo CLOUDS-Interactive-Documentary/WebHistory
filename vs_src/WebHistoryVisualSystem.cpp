@@ -8,7 +8,7 @@
 #include <Poco/URI.h>
 
 //--------------------------------------------------------------
-//These methods let us add custom GUI parameters and respond to their events
+// These methods let us add custom GUI parameters and respond to their events
 void WebHistoryVisualSystem::selfSetupGui()
 {
 	listGui = new ofxUISuperCanvas("SEARCH TERM LIST", gui);
@@ -415,7 +415,7 @@ void WebHistoryVisualSystem::selfSceneTransformation(){
 }
 
 //--------------------------------------------------------------
-//normal update call
+// normal update call
 void WebHistoryVisualSystem::selfUpdate()
 {
     // Update the extruders parameters.
@@ -423,6 +423,29 @@ void WebHistoryVisualSystem::selfUpdate()
     HistoryNode::textColor.setHsb(textHue->getPos(), textSat->getPos(), textBri->getPos(), textAlpha->getPos());
     HistoryNode::lineColor.setHsb(lineHue->getPos(), lineSat->getPos(), lineBri->getPos(), lineAlpha->getPos());
     HistoryNode::nodeColor.setHsb(nodeHue->getPos(), nodeSat->getPos(), nodeBri->getPos(), nodeAlpha->getPos());
+    
+    // Look for the node nearest to the mouse.
+	float nearestDistance = 0;
+	HistoryNode * nearestNode;
+	ofVec2f mousePoint(ofGetMouseX(), ofGetMouseY());
+	for (int i = 0; i < HistoryNode::allNodes.size(); i++) {
+        HistoryNode::allNodes[i]->update();
+        HistoryNode::allNodes[i]->bHighlighted = false;
+        
+		ofVec3f screenPoint = getCameraRef().worldToScreen(HistoryNode::allNodes[i]->worldPoint);
+		float distance = screenPoint.distance(mousePoint);
+		if (i == 0 || distance < nearestDistance) {
+			nearestDistance = distance;
+			nearestNode = HistoryNode::allNodes[i];
+		}
+	}
+    
+    // Highlight the nearest node and go up the tree.
+    HistoryNode *highlightNode = nearestNode;
+    while (nearestNode != NULL) {
+        nearestNode->bHighlighted = true;
+        nearestNode = nearestNode->parent;
+    }
     
     currSpin += spinSpeed;
 }
@@ -503,10 +526,11 @@ void WebHistoryVisualSystem::selfEnd()
 {
 		
 }
+//--------------------------------------------------------------
 // this is called when you should clear all the memory and delet anything you made in setup
 void WebHistoryVisualSystem::selfExit()
 {
-
+    HistoryNode::allNodes.clear();
 }
 
 //events are called when the system is active

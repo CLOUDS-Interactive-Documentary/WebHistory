@@ -20,11 +20,15 @@ public:
     HistoryNode(const string& name, int timestamp, int level, list<string>& childSegments, float latitude = ofRandom(360), float longitude = ofRandom(360));
     void addChild(list<string>& segments, int childLevel);
     
+    void update();
+    void draw();
     float billboard();
-    ofPoint draw();
     void print();
     
     float alpha;
+    ofVec3f worldPoint;
+    HistoryNode * parent;
+    bool bHighlighted;
     
     static ofTrueTypeFont font;
     static ofColor textColor;
@@ -44,6 +48,8 @@ public:
     static float levelDepth;
     static float noiseStep;
     static float noiseAmount;
+    
+    static vector<HistoryNode *> allNodes;
     
 private:
     string _name;
